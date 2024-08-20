@@ -1,0 +1,33 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.11.35208.52
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{78F51E39-9B61-4CE6-BE1A-CB9A33FCE79D}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "API", "API", "{3919A48B-7907-4235-B4A3-6DE011F227AB}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StockControl.Api", "src\StockControl.Api\StockControl.Api.csproj", "{45291446-F798-4304-B229-E66523693771}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{45291446-F798-4304-B229-E66523693771}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{45291446-F798-4304-B229-E66523693771}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{45291446-F798-4304-B229-E66523693771}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{45291446-F798-4304-B229-E66523693771}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{3919A48B-7907-4235-B4A3-6DE011F227AB} = {78F51E39-9B61-4CE6-BE1A-CB9A33FCE79D}
+		{45291446-F798-4304-B229-E66523693771} = {3919A48B-7907-4235-B4A3-6DE011F227AB}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {E7513E1F-074A-40D0-A36D-B377F4B33D44}
+	EndGlobalSection
+EndGlobal
