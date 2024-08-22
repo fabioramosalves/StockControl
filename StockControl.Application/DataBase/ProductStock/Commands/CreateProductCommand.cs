@@ -5,7 +5,6 @@ namespace StockControl.Application.DataBase.ProductStock.Commands
     public class CreateProductCommand : IRequest<int>
     {
         public string Name { get; set; } = string.Empty;
-        public string PartNumber { get; set; } = string.Empty;
         public decimal Cost {  get; set; }
 
 
@@ -14,7 +13,6 @@ namespace StockControl.Application.DataBase.ProductStock.Commands
             return new ProductEntity
             {
                 Name = command.Name,
-                PartNumber = command.PartNumber,
                 StockQuantity = 0,
                 Cost = command.Cost
             };
