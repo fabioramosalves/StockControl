@@ -47,7 +47,7 @@
             INNER JOIN 
                 Products p ON sm.ProductId = p.Id
             WHERE 
-                sm.MovementType = 0
+                sm.MovementType = 1
                 AND DATE(sm.MovementDate) = @MovementDate
             GROUP BY 
                 p.Name, p.PartNumber;";
