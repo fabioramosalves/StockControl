@@ -9,6 +9,6 @@ namespace StockControl.Application.DataBase.Product.Queries
         public string Name { get; set; } = string.Empty;
         public string PartNumber { get; set; } = string.Empty;
         public int StockQuantity { get; set; }
-        public decimal AverageCost { get; set; }
+        public decimal Cost { get; set; }
     }
 }

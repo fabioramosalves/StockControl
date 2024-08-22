@@ -1,4 +1,5 @@
-﻿using StockControl.Domain.Entities.Product;
+﻿using StockControl.Domain.Entities;
+using StockControl.Domain.Entities.Product;
 using StockControl.Domain.Entities.Stock;
 
 namespace StockControl.Domain.Repositories
@@ -7,8 +8,8 @@ namespace StockControl.Domain.Repositories
     {
         Task<int> CreateAsync(ProductEntity product);
         Task<ProductEntity> GetByIdAsync(int id);
-        Task<int> UpdateAsync(ProductEntity product);
-        Task<bool> AddStockAsync(StockMovementEntity product);
+        Task<bool> UpdateStockAsync(StockMovementEntity product);
         Task<int> DeleteAsync(int id);
+        Task<IEnumerable<ProductAverageCostDto>> GetSalesCustsByDayAsync(DateTime day);
     }
 }

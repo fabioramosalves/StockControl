@@ -11,6 +11,10 @@ namespace StockControl.Application.DataBase.ProductStock.Handlers
 
         public async Task<int> Handle(DeleteProductCommand request, CancellationToken cancellationToken)
         {
+            var stockProducts = await _productRepository.GetByIdAsync(request.Id);
+
+            if (stockProducts == null || stockProducts.StockQuantity > 0) return 0;
+
             return await _productRepository.DeleteAsync(request.Id);
         }
     }

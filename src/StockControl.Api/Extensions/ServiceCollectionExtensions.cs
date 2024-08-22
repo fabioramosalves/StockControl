@@ -13,10 +13,10 @@ namespace StockControl.Api.Extensions
         {
             services.AddMediatR(Assembly.GetExecutingAssembly());
             services.AddMediatR(typeof(CreateProductHandler).Assembly);
-            services.AddMediatR(typeof(UpdateProductHandler).Assembly);
             services.AddMediatR(typeof(DeleteProductHandler).Assembly);
             services.AddMediatR(typeof(GetProductByIdHandler).Assembly);
-            services.AddMediatR(typeof(AddStockCommandHandler).Assembly);
+            services.AddMediatR(typeof(UpdateStockCommandHandler).Assembly);
+            services.AddMediatR(typeof(GetSalesCustsByDayHandler).Assembly);
             services.AddMediatR(typeof(LogErrorHandler).Assembly);
 
             return services;

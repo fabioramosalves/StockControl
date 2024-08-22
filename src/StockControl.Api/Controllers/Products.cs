@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using StockControl.Application.DataBase.ProductStock.Commands;
 using StockControl.Application.DataBase.Product.Queries;
+using StockControl.Application.DataBase.ProductStock.Queries;
 
 namespace StockControl.Api.Controllers
 {
@@ -30,23 +31,6 @@ namespace StockControl.Api.Controllers
             return Ok(result);
         }
 
-        [HttpPut("{id}")]
-        public async Task<IActionResult> Update(int id, UpdateProductCommand command)
-        {
-            if (id != command.Id)
-            {
-                return BadRequest();
-            }
-
-            var result = await _mediator.Send(command);
-            if (result == 0)
-            {
-                return NotFound();
-            }
-
-            return NoContent();
-        }
-
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(int id)
         {
@@ -59,16 +43,34 @@ namespace StockControl.Api.Controllers
             return NoContent();
         }
 
-        [HttpPost("add-stock")]
-        public async Task<IActionResult> AddStock([FromBody] AddStockCommand command)
+        [HttpPut("stock")]
+        public async Task<IActionResult> UpdateStock([FromBody] UpdateStockCommand command)
         {
             var result = await _mediator.Send(command);
-            if (result)
+            if (result.Success)
             {
-                return Ok(new { message = "Stock updated successfully." });
+                return Ok();
             }
 
-            return BadRequest(new { message = "Failed to update stock." });
+            return BadRequest(new { result.Message });
+        }
+
+        [HttpGet("average-cost")]
+        public async Task<IActionResult> GetAverageCost([FromQuery] DateTime movementDate)
+        {
+            var command = new GetSalesCustsByDayQuery
+            {
+                MovementDate = movementDate
+            };
+
+            var result = await _mediator.Send(command);
+
+            if (result == null || !result.Any())
+            {
+                return NotFound(new { message = "No outbound movements found on the specified date." });
+            }
+
+            return Ok(result);
         }
     }
 }

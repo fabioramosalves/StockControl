@@ -6,7 +6,7 @@ namespace StockControl.Application.DataBase.ProductStock.Commands
     {
         public string Name { get; set; } = string.Empty;
         public string PartNumber { get; set; } = string.Empty;
-        public decimal AverageCost {  get; set; }
+        public decimal Cost {  get; set; }
 
 
         public static implicit operator ProductEntity(CreateProductCommand command)
@@ -16,7 +16,7 @@ namespace StockControl.Application.DataBase.ProductStock.Commands
                 Name = command.Name,
                 PartNumber = command.PartNumber,
                 StockQuantity = 0,
-                AverageCost = command.AverageCost
+                Cost = command.Cost
             };
         }
     }

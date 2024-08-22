@@ -1,5 +1,6 @@
 ﻿using Dapper;
 using Org.BouncyCastle.Asn1.Ocsp;
+using StockControl.Domain.Entities;
 using StockControl.Domain.Entities.Product;
 using StockControl.Domain.Entities.Stock;
 using StockControl.Domain.Repositories;
@@ -27,32 +28,30 @@ namespace StockControl.Persistence.Repositories.Producto
             return await _dbConnection.QueryFirstOrDefaultAsync<ProductEntity>(ProductSqlCommands.GetProductById, new { Id = id });
         }
 
-        public async Task<int> UpdateAsync(ProductEntity product)
+        public async Task<IEnumerable<ProductAverageCostDto>> GetSalesCustsByDayAsync(DateTime day)
         {
-            return await _dbConnection.ExecuteAsync(ProductSqlCommands.UpdateProduct, product);
+            var results = await _dbConnection.QueryAsync<ProductAverageCostDto>(
+                                        ProductSqlCommands.GetSalesCustsByDay,new { MovementDate = day });
+
+            return results;
         }
 
-        public async Task<bool> AddStockAsync(StockMovementEntity stock)
+        public async Task<bool> UpdateStockAsync(StockMovementEntity stock)
         {
             using var transaction = _dbConnection.BeginTransaction();
             try
-            {
-                if (_dbConnection.State == ConnectionState.Closed)
+            {       
+                await _dbConnection.ExecuteAsync(ProductSqlCommands.UpdateProduct, new
                 {
-                    _dbConnection.Open();
-                }
-
-                await _dbConnection.ExecuteAsync(ProductSqlCommands.AddStockSql, new
-                {
-                    stock.IncomingQuantity,
+                    stock.StockQuantity,
                     stock.ProductId
                 }, transaction);
 
                 await _dbConnection.ExecuteAsync(ProductSqlCommands.InsertMovementSql, new
                 {
                     stock.ProductId,
-                    stock.IncomingQuantity,
-                    stock.TotalCost
+                    stock.Quantity,
+                    stock.MovementType
                 }, transaction);
 
                 transaction.Commit();

@@ -6,16 +6,15 @@ CREATE TABLE Products (
     Name VARCHAR(100) NOT NULL,
     PartNumber VARCHAR(50) NOT NULL,
     StockQuantity INT NOT NULL,
-    AverageCost DECIMAL(10, 2) NOT NULL
+    Cost DECIMAL(10, 2) NOT NULL
 );
 
 CREATE TABLE StockMovements (
-    StockMovementId INT PRIMARY KEY AUTO_INCREMENT,
+    Id INT PRIMARY KEY AUTO_INCREMENT,
     ProductId INT NOT NULL,
     Quantity INT NOT NULL,
-    MovementType ENUM('Inbound', 'Outbound') NOT NULL,
+    MovementType VARCHAR(10) NOT NULL,
     MovementDate DATETIME NOT NULL,
-    TotalCost DECIMAL(10, 2) NOT NULL,
     FOREIGN KEY (ProductId) REFERENCES Products(Id)
 );
 
@@ -35,7 +34,7 @@ CREATE TABLE Logs (
 
 --*************DML commands*************
 
-INSERT INTO Products (Name, PartNumber, StockQuantity, AverageCost)
+INSERT INTO Products (Name, PartNumber, StockQuantity, Cost)
 VALUES 
 ('Vela de Ignição', 'VI-001', 0, 182.90),
 ('Junta do Cabeçote', 'JC-001', 0, 265.72),
