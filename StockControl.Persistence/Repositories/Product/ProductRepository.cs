@@ -16,22 +16,49 @@ namespace StockControl.Persistence.Repositories.Producto
 
         public async Task<int> CreateAsync(ProductEntity product)
         {
-            return await _dbConnection.ExecuteScalarAsync<int>(ProductSqlCommands.CreateProduct, product);
+            int productId;
+
+            using var transaction = _dbConnection.BeginTransaction();
+
+            try
+            {
+                productId = await _dbConnection.ExecuteScalarAsync<int>(ProductSqlCommands.CreateProductSql, product, transaction);
+
+                string partNumber = GeneratePartNumber(productId);
+
+                await _dbConnection.ExecuteAsync(ProductSqlCommands.UpdateProducartNumbertSql,
+                new
+                {
+                    PartNumber = partNumber,
+                    ProductId = productId
+                },
+                transaction
+                );
+
+                transaction.Commit();
+                return productId;
+            }
+            catch (Exception)
+            {
+                transaction.Rollback();
+                throw;
+            }
         }
+
         public async Task<int> DeleteAsync(int id)
         {
-            return await _dbConnection.ExecuteAsync(ProductSqlCommands.DeleteProduct, new { Id = id });
+            return await _dbConnection.ExecuteAsync(ProductSqlCommands.DeleteProductSql, new { Id = id });
         }
 
         public async Task<ProductEntity> GetByIdAsync(int id)
         {
-            return await _dbConnection.QueryFirstOrDefaultAsync<ProductEntity>(ProductSqlCommands.GetProductById, new { Id = id });
+            return await _dbConnection.QueryFirstOrDefaultAsync<ProductEntity>(ProductSqlCommands.GetProductByIdSql, new { Id = id });
         }
 
         public async Task<IEnumerable<ProductAverageCostDto>> GetSalesCustsByDayAsync(DateTime day)
         {
             var results = await _dbConnection.QueryAsync<ProductAverageCostDto>(
-                                        ProductSqlCommands.GetSalesCustsByDay,new { MovementDate = day });
+                                        ProductSqlCommands.GetSalesCustsByDaySql,new { MovementDate = day });
 
             return results;
         }
@@ -41,7 +68,7 @@ namespace StockControl.Persistence.Repositories.Producto
             using var transaction = _dbConnection.BeginTransaction();
             try
             {       
-                await _dbConnection.ExecuteAsync(ProductSqlCommands.UpdateProduct, new
+                await _dbConnection.ExecuteAsync(ProductSqlCommands.UpdateProductSql, new
                 {
                     stock.StockQuantity,
                     stock.ProductId
@@ -62,6 +89,15 @@ namespace StockControl.Persistence.Repositories.Producto
                 transaction.Rollback();
                 return false;
             }
+        }
+
+        private static string GeneratePartNumber(int productId)
+        {
+            string prefix = "PRD";
+            string datePart = DateTime.UtcNow.ToString("yyyyMMdd");
+            string sequence = productId.ToString("D4");
+
+            return $"{prefix}-{datePart}-{sequence}";
         }
     }
 }
