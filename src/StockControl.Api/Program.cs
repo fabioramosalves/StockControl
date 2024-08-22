@@ -1,15 +1,44 @@
+using MySql.Data.MySqlClient;
+using Serilog;
+using StockControl.Api.Extensions;
+using StockControl.Api.Middleware;
+using System.Data;
+
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
+if (builder.Configuration.GetValue<bool>("EnableSerilogSelfLog", false))
+{
+    Serilog.Debugging.SelfLog.Enable(msg => Console.WriteLine($"Serilog: {msg}"));
+}
+
+builder.Services.AddScoped<IDbConnection>(sp =>
+{
+    var connection = new MySqlConnection(builder.Configuration.GetConnectionString("ConnectionString"));
+    connection.Open();
+    return connection;
+});
+
+builder.Services.AddCustomMediatR();
+builder.Services.AddServices();
+
+
+builder.Host.UseSerilog((context, services, configuration) =>
+    configuration.WriteTo.Console()
+                .WriteTo.MySQL(
+                    context.Configuration.GetConnectionString("ConnectionString"),
+                    tableName: "Logs",
+                    restrictedToMinimumLevel: Serilog.Events.LogEventLevel.Error
+                 )
+);
 
 builder.Services.AddControllers();
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
+app.UseMiddleware<ExceptionLoggingMiddleware>();
+
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
