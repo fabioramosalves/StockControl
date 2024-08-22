@@ -1,5 +1,4 @@
 ﻿using Dapper;
-using Org.BouncyCastle.Asn1.Ocsp;
 using StockControl.Domain.Entities;
 using StockControl.Domain.Entities.Product;
 using StockControl.Domain.Entities.Stock;
